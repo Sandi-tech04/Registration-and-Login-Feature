@@ -15,6 +15,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class LoginTest {
     Login obj = new Login("Kyle", "Brown", "kyl_1", "Ch&&sec@ke99!", "+27838968976");
     
+    //assertEquals tests
     @Test
     public void testRegisteruserNameCorrectlyFormatted(){
         String userName = "kyl_1";
@@ -92,6 +93,7 @@ public class LoginTest {
         assertEquals(expected, results); 
     }
 
+    //Login tests
     @Test          
     public void testLoginSuccessful() {
          String userName = "kyl_1";
@@ -109,6 +111,7 @@ public class LoginTest {
         assertFalse(results); 
     }
      
+    //assertTrue / assertFalse tests
     @Test
     public void testuserNameCorrectlyFormatted() {
         String userName = "kyl_1";
