@@ -35,6 +35,7 @@ public class Login {
 
     }
     // Cell phone regex adapted from South African phone number format specifications
+   // Reference: https://www.regextester.com/
  public boolean checkcellPhoneNumber(String cellPhoneNumber){
      String regex = "^\\+27[0-9]{9}$";
         return cellPhoneNumber.matches(regex);
