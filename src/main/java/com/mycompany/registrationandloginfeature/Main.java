@@ -20,10 +20,10 @@ public class Main {
      System.out.println("================================");
      
      System.out.println("Enter your first name");
-     String firstName= input.nextLine();
+     String firstName = input.nextLine();
      
       System.out.println("Enter your last name");
-     String lastName= input.nextLine();
+     String lastName = input.nextLine();
     
      System.out.println("Enter your username");
      String userName = input.nextLine();
