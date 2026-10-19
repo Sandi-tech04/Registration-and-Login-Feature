@@ -58,7 +58,7 @@ public class Main {
      }
         System.out.println(Login.returnLoginStatus());
         
-                // ---------------- QUICKCHAT (Part 2) ----------------
+                // QUICKCHAT (Part 2)
         System.out.println("\nWelcome to QuickChat.");
 
         System.out.print("How many messages do you wish to enter? ");
