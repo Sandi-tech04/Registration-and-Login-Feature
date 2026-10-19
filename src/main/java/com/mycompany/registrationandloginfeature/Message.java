@@ -152,7 +152,7 @@ public String getMessageID()    { return messageID; }
                 if (check.startsWith("Cell phone number successfully")) break;
             }
             
- // ---- Message text (loop until <= 250 chars) ----
+             //Message text (loop until <= 250 characters)
             String text;
             while (true) {
                 System.out.print("Enter your message (max 250 chars): ");
@@ -164,11 +164,11 @@ public String getMessageID()    { return messageID; }
                     break;
                 }
             }
-            // ---- Build message ----
+            
             String id = generateMessageID();
             Message msg = new Message(id, i, recipient, text);
 
-            // ---- Send / Store / Disregard ----
+            //Send / Store / Disregard
             System.out.println("\nChoose an option:");
             System.out.println("1) Send Message");
             System.out.println("2) Store Message to send later");

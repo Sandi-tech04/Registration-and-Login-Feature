@@ -76,4 +76,32 @@ public class MessageTest {
         assertEquals("Message successfully stored", m.sentMessage(2));
         assertEquals("Stored", m.getFlag());
     }
+     
+    // Test for Disregard returns correct message
+    @Test
+    public void testDisregardMessage() {
+        Message m = new Message("0012345678", 1, "+27718693002", "Hi");
+        assertEquals("Press 0 to delete the message", m.sentMessage(3));
+        assertEquals("Disregard", m.getFlag());
+    }
+    @Test
+    public void testReturnTotalMessages() {
+        Message m1 = new Message("0012345678", 1, "+27718693002", "Hi");
+        Message m2 = new Message("0012345679", 2, "+27718693002", "Hello");
+
+        int before = m1.returnTotalMessages();
+        m1.sentMessage(1); // send
+        m2.sentMessage(1); // send
+        int after = m1.returnTotalMessages();
+
+        assertEquals(before + 2, after,
+                "Total sent messages should increase by 2");
+    }
+    
+    // Test for Invalid choice returns "Invalid option."
+    @Test
+    public void testInvalidChoice() {
+        Message m = new Message("0012345678", 1, "+27718693002", "Hi");
+        assertEquals("Invalid option.", m.sentMessage(99));
+    }
 }
