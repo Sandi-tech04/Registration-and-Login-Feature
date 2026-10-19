@@ -22,7 +22,7 @@ public class Message {
     private String recipient;
     private String messageText; 
     private String messageHash; 
-    private String flag;
+    private String flag; // "Sent", "Stored", "Disregard"
     
     // Keeps a running total of sent messages across the whole app run
     private static int totalMessagesSent = 0;
@@ -48,8 +48,7 @@ public String checkRecipientCell() {
         if (recipient != null && recipient.matches(regex)) {
             return "Cell phone number successfully captured.";
         }
-        return "Cell phone number is incorrectly formatted or does not contain an international "
-             + "code. Please correct the number and try again.";
+        return "Cell phone number is incorrectly formatted or does not contain an international code. Please correct the number and try again.";
 }
 public String createMessageHash() {
         if (messageText == null || messageText.trim().isEmpty()) {
