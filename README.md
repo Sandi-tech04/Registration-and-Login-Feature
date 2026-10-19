@@ -1,101 +1,82 @@
-# Registration and Login Feature – Part 1
+# Registration, Login & QuickChat Feature – Part 1 & Part 2
 
 ## Project Description
 
-This project is a Java-based Registration and Login System developed for Part 1 of the programming assignment.
+This project is a Java-based Registration, Login, and QuickChat messaging system developed for Part 1 and Part 2 of the programming assignment.
 
-The system allows a user to register by entering their first name, last name, username, password, and South African cellphone number. 
+The system first allows a user to register by entering their first name, last name, username, password, and South African cellphone number. The program validates the information entered by the user according to the required formatting rules. 
 
-The program validates the information entered by the user according to the required formatting rules.
+Once logged in, the user is taken to the **QuickChat** application. QuickChat allows the user to send, store, or disregard messages. It includes automatic message ID generation, message hashing, character limits, and stores "stored" messages to a local JSON file.
 
-The system also allows the user to enter their username and password to test whether the login details are correct.
-
-JUnit 5 tests are included to test the different registration, validation, and login functions.
+JUnit 5 tests are included to test the registration, login, and messaging functions, and these tests are automated using GitHub Actions CI/CD.
 
 ## Features
 
 The program includes the following features:
 
--User registration
--First name and last name input
--Username validation
--Password complexity validation
--South African cellphone number validation
--User login
--Successful and unsuccessful login testing
--JUnit 5 unit tests
+**Part 1: Registration & Login**
+- User registration (First name, last name, username, password, cellphone number)
+- Username validation (must contain `_` and be ≤ 5 characters)
+- Password complexity validation (≥ 8 chars, capital letter, number, special character)
+- South African cellphone number validation (`+27...`)
+- User login with success/failure status messages
+
+**Part 2: QuickChat Application**
+- "Welcome to QuickChat" menu with a while-loop that runs until the user quits
+- Ability for the user to define how many messages they want to enter
+- Automatic 10-digit Message ID generation
+- Automatic Message Hash generation (e.g., `00:0:HITONIGHT`)
+- 250-character limit validation for messages
+- Options to Send, Store, or Disregard a message
+- Automatic saving of "Stored" messages to a `messages.json` file
+- Automated CI/CD pipeline using GitHub Actions
 
 ## Validation Requirements
 
 ### Username
-
 The username must:
-
 * Contain an underscore (`_`)
 * Be no more than 5 characters long
-
-Example of a valid username:
-
-`kyl_1`
+* *Example:* `kyl_1`
 
 ### Password
-
 The password must:
-
 * Contain at least 8 characters
 * Contain at least one uppercase letter
 * Contain at least one number
 * Contain at least one special character
-
-Example of a valid password:
-
-`Ch&&sec@ke99!`
+* *Example:* `Ch&&sec@ke99!`
 
 ### Cellphone Number
-
 The cellphone number must:
-
 * Use the South African international code `+27`
 * Contain the required number of digits
+* *Example:* `+27838968976`
 
-Example of a valid cellphone number:
-
-`+27838968976`
+### Message Hash
+The message hash is auto-generated and contains:
+* The first two digits of the Message ID
+* A colon (`:`)
+* The message number
+* A colon (`:`)
+* The first word and last word of the message (ALL CAPS, no spaces)
+* *Example:* `00:0:HITONIGHT`
 
 ## Project Structure
 
 The project contains the following main classes:
 
 ### Main.java
-
-The `Main` class controls the flow of the program. It collects the user's registration details, creates a `Login` object, calls the registration method, and collects the user's login details.
+Controls the flow of the program. It handles the registration and login process, then displays the QuickChat menu and captures the user's menu choices (Send, Coming Soon, Quit).
 
 ### Login.java
+Stores the user's information and contains the methods responsible for username validation, password validation, cellphone number validation, user registration, and login status.
 
-The `Login` class stores the user's information and contains the methods responsible for:
+### Message.java
+Handles all QuickChat message logic. It generates Message IDs, creates Message Hashes, checks message lengths, and manages the Send/Store/Disregard logic. It also handles writing the stored messages to a JSON file.
 
-* Username validation
-* Password validation
-* Cellphone number validation
-* User registration
-* User login
-* Returning the login status
-
-### LoginTest.java
-
-The `LoginTest` class uses JUnit 5 to test the functionality of the `Login` class.
-
-The tests include:
-
-* Correctly formatted usernames
-* Incorrectly formatted usernames
-* Passwords that meet the complexity requirements
-* Passwords that do not meet the complexity requirements
-* Correctly formatted cellphone numbers
-* Incorrectly formatted cellphone numbers
-* Successful login
-* Failed login
-* Individual validation methods
+### LoginTest.java & MessageTest.java
+These classes use JUnit 5 to test the functionality of the `Login` and `Message` classes. They test both success and failure scenarios for validation, login, and message limits.
 
 ## Technologies Used
 
@@ -103,29 +84,31 @@ The tests include:
 * NetBeans
 * Maven
 * JUnit 5
-* GitHub
+* GitHub & GitHub Actions (CI/CD)
 
 ## How to Run the Program
 
 1. Open the project in NetBeans.
 2. Build the project using Maven.
 3. Run the `Main` class.
-4. Enter the requested registration information.
-5. The program will validate the information entered.
-6. Enter the username and password when prompted to test the login functionality.
+4. Enter the requested registration information, then log in.
+5. Once logged in, enter the number of messages you wish to send.
+6. Use the menu to interact with the QuickChat application.
 
 ## How to Run the Tests
 
+**Locally in NetBeans:**
 1. Open the project in NetBeans.
-2. Locate the `LoginTest` class.
-3. Right-click the test class.
-4. Select **Test File**.
-5. JUnit will execute the tests.
-6. The test results will indicate which tests passed or failed.
+2. Locate the `LoginTest` or `MessageTest` class in the Test Packages folder.
+3. Right-click the test class and select **Test File**.
+4. JUnit will execute the tests and show the results.
+
+**Automated Testing (GitHub Actions):**
+Every time code is pushed to the `master` branch, GitHub Actions automatically runs all JUnit tests. You can view the test results by clicking the **Actions** tab on the GitHub repository.
 
 ## Testing
 
-JUnit 5 is used to verify that the registration and login functionality produces the expected results.
+JUnit 5 is used to verify that the registration, login, and messaging functionality produces the expected results.
 
 `assertEquals` is used to compare expected and actual messages, while `assertTrue` and `assertFalse` are used when testing Boolean results.
 
