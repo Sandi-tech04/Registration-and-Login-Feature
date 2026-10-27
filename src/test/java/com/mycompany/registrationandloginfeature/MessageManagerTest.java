@@ -16,34 +16,42 @@ public class MessageManagerTest {
     
     private MessageManager mgr;
 
-    @BeforeEach
+        @BeforeEach
     public void setUp() {
         mgr = new MessageManager(10);
 
         // ---- Populate with Test Data (Messages 1-5) ----
-        // Message 1
+        // Message 1 (Sent)
         mgr.addSentMessage("1111111111", "11:1:DIDCAKE", "+27834557896", "Me",
                 "Did you get the cake?");
+                
         // Message 2 (Stored)
         mgr.addStoredMessage("2222222222", "22:2:WHERETIME",
                 "+27838884567", "Me",
                 "Where are you? You are late! I have asked you to be on time.");
+                
         // Message 3 (Disregarded)
         mgr.addDisregardedMessage("Yohoooo, I am at your gate.");
-        // Message 4 (Sent)
-        mgr.addSentMessage("0838884567", "08:4:ITDINNER",
-                "+27834557896", "Me", "It is dinner time!");
+        
+        // Message 4 (Developer Entry - Stored so the search test can find it)
+        mgr.addStoredMessage("0838884567", "08:4:ITDINNER",
+                "+27834484567", "Developer", "It is dinner time!");
+                
         // Message 5 (Stored)
         mgr.addStoredMessage("5555555555", "55:5:OKLEAVING",
                 "+27838884567", "Me", "Ok, I am leaving without you.");
     }
 
     // ---- Sent Messages array correctly populated ----
-    @Test
+        @Test
     public void testSentMessagesArrayPopulated() {
         String[] sent = mgr.getSentMessages();
         assertEquals("Did you get the cake?", sent[0]);
-        assertEquals("It is dinner time!", sent[1]);
+        
+        // Message 4 ("It is dinner time!") is stored, so we check the stored array
+        String[] stored = mgr.getStoredMessages();
+        assertEquals("It is dinner time!", stored[1]); 
+ 
     }
 
     // ---- Longest message ----
