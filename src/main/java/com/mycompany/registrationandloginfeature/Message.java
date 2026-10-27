@@ -22,7 +22,7 @@ public class Message {
     private String recipient;
     private String messageText; 
     private String messageHash; 
-    private String flag; // "Sent", "Stored", "Disregard"
+    private String flag; // "Sent", "Stored", "Disregard", "Pending"
     
     // Keeps a running total of sent messages across the whole app run
     private static int totalMessagesSent = 0;
@@ -54,7 +54,7 @@ public String createMessageHash() {
         if (messageText == null || messageText.trim().isEmpty()) {
             return "";
         }
-        String firstTwo = messageID.substring(0, 2);
+        String firstTwo = messageID.substring(0, Math.min(2, messageID.length()));
         String[] words = messageText.trim().split("\\s+");
         String firstWord = words[0].replaceAll("[^a-zA-Z]", "");
         String lastWord  = words[words.length - 1].replaceAll("[^a-zA-Z]", "");
@@ -137,7 +137,7 @@ public String getMessageID()    { return messageID; }
         for (int i = 0; i < 10; i++) id.append(rand.nextInt(10));
         return id.toString();
     }
-    public static void sendMessages(int numMessages, Scanner input) {
+    public static void sendMessages(int numMessages, Scanner input, MessageManager mgr) {
         for (int i = 1; i <= numMessages; i++) {
             System.out.println("\n--- Message " + i + " of " + numMessages + " ---");
 
@@ -180,16 +180,23 @@ public String getMessageID()    { return messageID; }
             catch (NumberFormatException e) { choice = 0; }
 
             System.out.println(msg.sentMessage(choice));
-            if (msg.getFlag().equals("Sent")) {
-                System.out.println("\n===== Message Details =====");
-                System.out.println(msg.printMessages());
-                System.out.println("===========================\n");
-            } else if (msg.getFlag().equals("Stored")) {
-                msg.storeMessage();
-            }
+            String flag = msg.getFlag();
+        if (flag.equals("Sent")) {
+            System.out.println("\n===== Message Details =====");
+            System.out.println(msg.printMessages());
+            System.out.println("===========================\n");
+            mgr.addSentMessage(msg.getMessageID(), msg.getMessageHash(),
+                               msg.getRecipient(), "Me", msg.getMessageText());
+        } else if (flag.equals("Stored")) {
+            msg.storeMessage();
+            mgr.addStoredMessage(msg.getMessageID(), msg.getMessageHash(),
+                                 msg.getRecipient(), "Me", msg.getMessageText());
+        } else if (flag.equals("Disregard")) {
+            mgr.addDisregardedMessage(msg.getMessageText());
         }
-        System.out.println("Total messages sent: " + totalMessagesSent);
-        writeJsonFile();
     }
+    System.out.println("Total messages sent: " + totalMessagesSent);
+    writeJsonFile();
+}
 }
         
