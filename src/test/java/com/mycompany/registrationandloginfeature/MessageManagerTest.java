@@ -33,9 +33,9 @@ public class MessageManagerTest {
         // Message 3 (Disregarded)
         mgr.addDisregardedMessage("Yohoooo, I am at your gate.");
         
-        // Message 4 (Developer Entry - Stored so the search test can find it)
-        mgr.addStoredMessage("0838884567", "08:4:ITDINNER",
-                "+27834484567", "Developer", "It is dinner time!");
+        // Message 4 (Developer Entry - Sent as per brief)
+mgr.addSentMessage("0838884567", "08:4:ITDINNER",
+        "+27834484567", "Developer", "It is dinner time!");
                 
         // Message 5 (Stored)
         mgr.addStoredMessage("5555555555", "55:5:OKLEAVING",
@@ -46,11 +46,8 @@ public class MessageManagerTest {
         @Test
     public void testSentMessagesArrayPopulated() {
         String[] sent = mgr.getSentMessages();
-        assertEquals("Did you get the cake?", sent[0]);
-        
-        // Message 4 ("It is dinner time!") is stored, so we check the stored array
-        String[] stored = mgr.getStoredMessages();
-        assertEquals("It is dinner time!", stored[1]); 
+assertEquals("Did you get the cake?", sent[0]);
+assertEquals("It is dinner time!", sent[1]); 
  
     }
 
@@ -82,10 +79,10 @@ public class MessageManagerTest {
         String result = mgr.deleteByHash("22:2:WHERETIME");
         assertTrue(result.contains("Where are you? You are late! I have asked you to be on time"));
         assertTrue(result.contains("successfully deleted"));
-        // Verify it's actually removed
-        assertEquals("No messages found for that recipient.",
-                mgr.searchByRecipient("+27838884567").contains("Where are") ?
-                "still there" : "No messages found for that recipient.");
+        // Verify it's actually removed. 
+// Note: Message 5 is still stored for this recipient, so we just check that the deleted text is gone.
+String remainingMessages = mgr.searchByRecipient("+27838884567");
+assertFalse(remainingMessages.contains("Where are you?"));
     }
 
     // ---- Display report ----
