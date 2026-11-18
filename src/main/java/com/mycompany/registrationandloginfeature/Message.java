@@ -141,7 +141,7 @@ public String getMessageID()    { return messageID; }
         for (int i = 1; i <= numMessages; i++) {
             System.out.println("\n--- Message " + i + " of " + numMessages + " ---");
 
-            // ---- Recipient (loop until valid) ----
+            //Recipient (loop until valid)
             String recipient;
             while (true) {
                 System.out.print("Enter recipient cell number (+27...): ");
