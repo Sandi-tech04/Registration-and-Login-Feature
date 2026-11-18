@@ -20,7 +20,7 @@ public class MessageManagerTest {
     public void setUp() {
         mgr = new MessageManager(10);
 
-        // ---- Populate with Test Data (Messages 1-5) ----
+        //Populate with Test Data (Messages)
         // Message 1 (Sent)
         mgr.addSentMessage("1111111111", "11:1:DIDCAKE", "+27834557896", "Me",
                 "Did you get the cake?");
@@ -33,7 +33,7 @@ public class MessageManagerTest {
         // Message 3 (Disregarded)
         mgr.addDisregardedMessage("Yohoooo, I am at your gate.");
         
-        // Message 4 (Developer Entry - Sent as per brief)
+        // Message 4 (Sent)
 mgr.addSentMessage("0838884567", "08:4:ITDINNER",
         "+27834484567", "Developer", "It is dinner time!");
                 
@@ -42,7 +42,7 @@ mgr.addSentMessage("0838884567", "08:4:ITDINNER",
                 "+27838884567", "Me", "Ok, I am leaving without you.");
     }
 
-    // ---- Sent Messages array correctly populated ----
+    //Sent Messages array correctly populated
         @Test
     public void testSentMessagesArrayPopulated() {
         String[] sent = mgr.getSentMessages();
@@ -51,21 +51,21 @@ assertEquals("It is dinner time!", sent[1]);
  
     }
 
-    // ---- Longest message ----
+    //Longest message
     @Test
     public void testDisplayLongestMessage() {
         String expected = "Where are you? You are late! I have asked you to be on time.";
         assertEquals(expected, mgr.displayLongestMessage());
     }
 
-    // ---- Search by message ID ----
+    //Search by message ID
     @Test
     public void testSearchByMessageID() {
         String result = mgr.searchByMessageID("0838884567");
         assertTrue(result.contains("It is dinner time!"));
     }
 
-    // ---- Search all messages by recipient ----
+    //Search all messages by recipient
     @Test
     public void testSearchByRecipient() {
         String result = mgr.searchByRecipient("+27838884567");
@@ -73,19 +73,19 @@ assertEquals("It is dinner time!", sent[1]);
         assertTrue(result.contains("Ok, I am leaving without you."));
     }
 
-    // ---- Delete by hash ----
+    //Delete by hash
     @Test
     public void testDeleteByHash() {
         String result = mgr.deleteByHash("22:2:WHERETIME");
         assertTrue(result.contains("Where are you? You are late! I have asked you to be on time"));
         assertTrue(result.contains("successfully deleted"));
-        // Verify it's actually removed. 
-// Note: Message 5 is still stored for this recipient, so we just check that the deleted text is gone.
+        
+        
 String remainingMessages = mgr.searchByRecipient("+27838884567");
 assertFalse(remainingMessages.contains("Where are you?"));
     }
 
-    // ---- Display report ----
+    //Display report
     @Test
     public void testDisplayReport() {
         String report = mgr.displayReport();
