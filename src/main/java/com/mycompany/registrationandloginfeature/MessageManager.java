@@ -15,18 +15,16 @@ import java.io.IOException;
  * @author sandi
  */
 public class MessageManager {
-        // ---- Parallel arrays (NO ArrayList) ----
+        // Parallel arrays
     private String[] sentMessages;
     private String[] disregardedMessages;
     private String[] storedMessages;
 
-    // Separate arrays for Sent messages
     private String[] sentHashes;
     private String[] sentIDs;
     private String[] sentRecipients;
     private String[] sentSenders;
 
-    // Separate arrays for Stored messages
     private String[] storedHashes;
     private String[] storedIDs;
     private String[] storedRecipients;
@@ -118,7 +116,7 @@ public class MessageManager {
         return end == -1 ? null : block.substring(start, end);
     }
 
-        // ---------- FEATURE a: Display senders & recipients ----------
+        //Display senders & recipients
     public String displaySendersAndRecipients() {
         StringBuilder sb = new StringBuilder("Sender | Recipient\n");
         for (int i = 0; i < storedCount; i++) {
@@ -137,7 +135,7 @@ public class MessageManager {
         return longest;
     }
 
-    // ---------- FEATURE c: Search by message ID ----------
+    //Search by message ID
 public String searchByMessageID(String id) {
     // 1. Search Stored Messages
     for (int i = 0; i < storedCount; i++) {
@@ -146,7 +144,7 @@ public String searchByMessageID(String id) {
         }
     }
     
-    // 2. Search Sent Messages (This is where Message 4 lives now)
+    // Search Sent Messages (This is where Message 4 lives now)
     for (int i = 0; i < sentCount; i++) {
         if (sentIDs[i].equals(id)) {
             return "Recipient: " + sentRecipients[i] + "\nMessage: " + sentMessages[i];
@@ -156,7 +154,7 @@ public String searchByMessageID(String id) {
     return "Message ID not found.";
 }
 
-        // ---------- FEATURE d: Search all messages by recipient ----------
+        //Search all messages by recipient
     public String searchByRecipient(String recipient) {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < storedCount; i++) {
@@ -167,7 +165,7 @@ public String searchByMessageID(String id) {
         return sb.length() == 0 ? "No messages found for that recipient." : sb.toString().trim();
     }
 
-        // ---------- FEATURE e: Delete by message hash ----------
+        //Delete by message hash
     public String deleteByHash(String hash) {
         for (int i = 0; i < storedCount; i++) {
             if (storedHashes[i].equalsIgnoreCase(hash)) {
@@ -187,7 +185,7 @@ public String searchByMessageID(String id) {
         return "Message hash not found.";
     }
 
-       // ---------- FEATURE f: Full report (STORED) ----------
+       //Full report (STORED)
     public String displayReport() {
         StringBuilder sb = new StringBuilder("===== STORED MESSAGES REPORT =====\n");
         sb.append("Message Hash | Recipient | Message\n");
@@ -200,12 +198,11 @@ public String searchByMessageID(String id) {
         return sb.toString();
     }
 
-        // ---------- Getters for tests ----------
+        //Getters for tests
     public String[] getSentMessages()        { return sentMessages; }
     public String[] getDisregardedMessages() { return disregardedMessages; }
     public String[] getStoredMessages()      { return storedMessages; }
     
-    // Your new separated arrays getters
     public String[] getSentHashes()          { return sentHashes; }
     public String[] getSentIDs()             { return sentIDs; }
     public String[] getStoredHashes()        { return storedHashes; }
