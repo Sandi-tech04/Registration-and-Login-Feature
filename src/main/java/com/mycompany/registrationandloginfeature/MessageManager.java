@@ -15,36 +15,51 @@ import java.io.IOException;
  * @author sandi
  */
 public class MessageManager {
-    // ---- Parallel arrays (NO ArrayList) ----
+        // ---- Parallel arrays (NO ArrayList) ----
     private String[] sentMessages;
     private String[] disregardedMessages;
     private String[] storedMessages;
-    private String[] messageHashes;
-    private String[] messageIDs;
-    private String[] recipients;   // parallel to storedMessages (for report / search)
-    private String[] senders;      // parallel to storedMessages
+
+    // Separate arrays for Sent messages
+    private String[] sentHashes;
+    private String[] sentIDs;
+    private String[] sentRecipients;
+    private String[] sentSenders;
+
+    // Separate arrays for Stored messages
+    private String[] storedHashes;
+    private String[] storedIDs;
+    private String[] storedRecipients;
+    private String[] storedSenders;
+    
     private int sentCount = 0;
     private int disregardCount = 0;
     private int storedCount = 0;
 
-    // Constructor - size set by caller
-    public MessageManager(int maxMessages) {
+    // Constructor
+        public MessageManager(int maxMessages) {
         sentMessages        = new String[maxMessages];
         disregardedMessages = new String[maxMessages];
         storedMessages      = new String[maxMessages];
-        messageHashes       = new String[maxMessages * 2]; // hashes for all messages
-        messageIDs          = new String[maxMessages * 2];
-        recipients          = new String[maxMessages];
-        senders             = new String[maxMessages];
+
+        sentHashes          = new String[maxMessages];
+        sentIDs             = new String[maxMessages];
+        sentRecipients      = new String[maxMessages];
+        sentSenders         = new String[maxMessages];
+
+        storedHashes        = new String[maxMessages];
+        storedIDs           = new String[maxMessages];
+        storedRecipients    = new String[maxMessages];
+        storedSenders       = new String[maxMessages];
     }
 
-    // ---------- POPULATE ARRAYS ----------
-    public void addSentMessage(String id, String hash, String recipient, String sender, String text) {
-        sentMessages[sentCount] = text;
-        messageIDs[sentCount]   = id;
-        messageHashes[sentCount] = hash;
-        recipients[sentCount]   = recipient;
-        senders[sentCount]      = sender;
+    //POPULATE ARRAYS
+        public void addSentMessage(String id, String hash, String recipient, String sender, String text) {
+        sentMessages[sentCount]   = text;
+        sentIDs[sentCount]        = id;
+        sentHashes[sentCount]     = hash;
+        sentRecipients[sentCount] = recipient;
+        sentSenders[sentCount]    = sender;
         sentCount++;
     }
 
@@ -53,16 +68,16 @@ public class MessageManager {
     }
 
     // Adds to stored arrays AND keeps parallel hash/id/recipient/sender
-    public void addStoredMessage(String id, String hash, String recipient, String sender, String text) {
-        storedMessages[storedCount] = text;
-        messageIDs[storedCount]     = id;
-        messageHashes[storedCount]  = hash;
-        recipients[storedCount]     = recipient;
-        senders[storedCount]        = sender;
+        public void addStoredMessage(String id, String hash, String recipient, String sender, String text) {
+        storedMessages[storedCount]   = text;
+        storedIDs[storedCount]        = id;
+        storedHashes[storedCount]     = hash;
+        storedRecipients[storedCount] = recipient;
+        storedSenders[storedCount]    = sender;
         storedCount++;
     }
 
-    // ---------- READ JSON INTO STORED ARRAY ----------
+    //READ JSON INTO STORED ARRAY
     /*
      * Reads messages.json (written in Part 2) into the storedMessages array.
      * Reference: https://www.geeksforgeeks.org/parse-json-java/
@@ -103,16 +118,16 @@ public class MessageManager {
         return end == -1 ? null : block.substring(start, end);
     }
 
-    // ---------- FEATURE a: Display senders & recipients ----------
+        // ---------- FEATURE a: Display senders & recipients ----------
     public String displaySendersAndRecipients() {
         StringBuilder sb = new StringBuilder("Sender | Recipient\n");
         for (int i = 0; i < storedCount; i++) {
-            sb.append(senders[i]).append(" | ").append(recipients[i]).append("\n");
+            sb.append(storedSenders[i]).append(" | ").append(storedRecipients[i]).append("\n");
         }
         return sb.toString();
     }
 
-    // ---------- FEATURE b: Longest stored message ----------
+    //Longest stored message
     public String displayLongestMessage() {
         if (storedCount == 0) return "No stored messages.";
         String longest = storedMessages[0];
@@ -123,38 +138,47 @@ public class MessageManager {
     }
 
     // ---------- FEATURE c: Search by message ID ----------
-    public String searchByMessageID(String id) {
-        for (int i = 0; i < storedCount; i++) {
-            if (messageIDs[i].equals(id)) {
-                return "Recipient: " + recipients[i] + "\nMessage: " + storedMessages[i];
-            }
+public String searchByMessageID(String id) {
+    // 1. Search Stored Messages
+    for (int i = 0; i < storedCount; i++) {
+        if (storedIDs[i].equals(id)) {
+            return "Recipient: " + storedRecipients[i] + "\nMessage: " + storedMessages[i];
         }
-        return "Message ID not found.";
     }
+    
+    // 2. Search Sent Messages (This is where Message 4 lives now)
+    for (int i = 0; i < sentCount; i++) {
+        if (sentIDs[i].equals(id)) {
+            return "Recipient: " + sentRecipients[i] + "\nMessage: " + sentMessages[i];
+        }
+    }
+    
+    return "Message ID not found.";
+}
 
-    // ---------- FEATURE d: Search all messages by recipient ----------
+        // ---------- FEATURE d: Search all messages by recipient ----------
     public String searchByRecipient(String recipient) {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < storedCount; i++) {
-            if (recipients[i].equals(recipient)) {
+            if (storedRecipients[i].equals(recipient)) {
                 sb.append(storedMessages[i]).append("\n");
             }
         }
         return sb.length() == 0 ? "No messages found for that recipient." : sb.toString().trim();
     }
 
-    // ---------- FEATURE e: Delete by message hash ----------
+        // ---------- FEATURE e: Delete by message hash ----------
     public String deleteByHash(String hash) {
         for (int i = 0; i < storedCount; i++) {
-            if (messageHashes[i].equalsIgnoreCase(hash)) {
+            if (storedHashes[i].equalsIgnoreCase(hash)) {
                 String deleted = storedMessages[i];
                 // Shift arrays left
                 for (int j = i; j < storedCount - 1; j++) {
-                    storedMessages[j] = storedMessages[j + 1];
-                    messageIDs[j]     = messageIDs[j + 1];
-                    messageHashes[j]  = messageHashes[j + 1];
-                    recipients[j]     = recipients[j + 1];
-                    senders[j]        = senders[j + 1];
+                    storedMessages[j]   = storedMessages[j + 1];
+                    storedIDs[j]        = storedIDs[j + 1];
+                    storedHashes[j]     = storedHashes[j + 1];
+                    storedRecipients[j] = storedRecipients[j + 1];
+                    storedSenders[j]    = storedSenders[j + 1];
                 }
                 storedCount--;
                 return "Message: \"" + deleted + "\" successfully deleted.";
@@ -163,26 +187,32 @@ public class MessageManager {
         return "Message hash not found.";
     }
 
-    // ---------- FEATURE f: Full report ----------
+       // ---------- FEATURE f: Full report (STORED) ----------
     public String displayReport() {
         StringBuilder sb = new StringBuilder("===== STORED MESSAGES REPORT =====\n");
         sb.append("Message Hash | Recipient | Message\n");
         sb.append("-----------------------------------\n");
         for (int i = 0; i < storedCount; i++) {
-            sb.append(messageHashes[i]).append(" | ")
-              .append(recipients[i]).append(" | ")
+            sb.append(storedHashes[i]).append(" | ")
+              .append(storedRecipients[i]).append(" | ")
               .append(storedMessages[i]).append("\n");
         }
         return sb.toString();
     }
 
-    // ---------- Getters for tests ----------
+        // ---------- Getters for tests ----------
     public String[] getSentMessages()        { return sentMessages; }
     public String[] getDisregardedMessages() { return disregardedMessages; }
     public String[] getStoredMessages()      { return storedMessages; }
-    public String[] getMessageHashes()       { return messageHashes; }
-    public String[] getMessageIDs()          { return messageIDs; }
+    
+    // Your new separated arrays getters
+    public String[] getSentHashes()          { return sentHashes; }
+    public String[] getSentIDs()             { return sentIDs; }
+    public String[] getStoredHashes()        { return storedHashes; }
+    public String[] getStoredIDs()           { return storedIDs; }
+    
     public int getSentCount()                { return sentCount; }
     public int getStoredCount()              { return storedCount; }
     public int getDisregardCount()           { return disregardCount; }
+    
 }
